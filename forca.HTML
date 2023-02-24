@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jogo da Forca</title>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<h1>Jogo da Forca</h1>
+	<p>Adivinhe a palavra:</p>
+	<p id="palavra"></p>
+	<p id="dica">Animal</p>
+	<p>Tentativas restantes: <span id="tentativas">6</span></p>
+	<p>Letras usadas: <span id="letras-usadas"></span></p>
+	<form>
+		<label for="letra">Digite uma letra:</label>
+		<input type="text" id="letra" maxlength="1" autocomplete="off">
+		<button type="button" id="enviar">Enviar</button>
+	</form>
+
+	<script>
+		// Palavra a ser adivinhada
+		var palavra = "BUFALO";
+		// Número de tentativas permitidas
+		var maxTentativas = 6;
+		// Letras já usadas
+		var letrasUsadas = [];
+		// Número de tentativas restantes
+		var tentativasRestantes = maxTentativas;
+		// Array com as letras da palavra
+		var letras = palavra.split("");
+		// Array para armazenar as letras adivinhadas
+		var letrasAdivinhadas = new Array(letras.length).fill("_");
+
+		// Função para atualizar a tela
+		function atualizarTela() {
+			// Atualiza a palavra na tela
+			document.getElementById("palavra").textContent = letrasAdivinhadas.join(" ");
+			// Atualiza as tentativas restantes na tela
+			document.getElementById("tentativas").textContent = tentativasRestantes;
+			// Atualiza as letras usadas na tela
+			document.getElementById("letras-usadas").textContent = letrasUsadas.join(", ");
+		}
+
+		// Função para verificar se a letra enviada está na palavra
+		function verificarLetra() {
+			var letra = document.getElementById("letra").value.toUpperCase();
+			// Verifica se a letra já foi usada
+			if (letrasUsadas.includes(letra)) {
+				alert("Você já usou essa letra!");
+				return;
+			}
+			// Adiciona a letra usada ao array de letras usadas
+			letrasUsadas.push(letra);
+			// Verifica se a letra está na palavra
+			if (letras.includes(letra)) {
+				// Se estiver, atualiza o array de letras adivinhadas com a letra
+				for (var i = 0; i < letras.length; i++) {
+					if (letras[i] === letra) {
+						letrasAdivinhadas[i] = letra;
+					}
+				}
+				// Verifica se o jogador adivinhou a palavra
+				if (!letrasAdivinhadas.includes("_")) {
+					alert("Parabéns, você ganhou!");
+					location.reload();
+				}
+			} else {
+				// Se a letra não estiver na palavra
+							// Decrementa o número de tentativas restantes
+			tentativasRestantes--;
+			// Verifica se o jogador perdeu o jogo
+			if (tentativasRestantes === 0) {
+				alert("Que pena, você perdeu! A palavra era: " + palavra);
+				location.reload();
+			}
+		}
+		// Atualiza a tela
+		atualizarTela();
+		// Limpa o campo de texto
+		document.getElementById("letra").value = "";
+	}
+
+	// Atualiza a tela pela primeira vez
+	atualizarTela();
+
+	// Adiciona o evento ao botão "enviar"
+	document.getElementById("enviar").addEventListener("click", verificarLetra);
+</script>
+</body>
+</html>
